@@ -9,7 +9,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Label } from "@/components/ui/label"
-import NavbarEnhanced from "@/components/navbar-enhanced"
 import { useAuth } from "@/lib/auth"
 import { apiFootball, type ApiMatch } from "@/lib/api-football"
 
@@ -254,8 +253,6 @@ export default function SearchPage() {
 
   return (
     <div className="min-h-screen bg-gray-950 text-white">
-      <NavbarEnhanced />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="text-center mb-8">

@@ -2,12 +2,15 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
+import { ThemeProvider } from "@/components/theme-provider"
+import { Toaster } from "@/components/ui/sonner"
+import Navbar from "@/components/navbar"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "Tribuneros - La red social del fútbol",
-  description: "Registra, puntúa y comparte los partidos que ves. La red social para los verdaderos hinchas.",
+  description: "La red social donde los hinchas puntúan partidos",
     generator: 'v0.dev'
 }
 
@@ -17,8 +20,16 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="es" className="dark">
-      <body className={`${inter.className} bg-gray-950 text-white antialiased`}>{children}</body>
+    <html lang="es" suppressHydrationWarning>
+      <body className={inter.className}>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+          <div className="min-h-screen bg-gray-950">
+            <Navbar />
+            <main>{children}</main>
+          </div>
+          <Toaster />
+        </ThemeProvider>
+      </body>
     </html>
   )
 }

@@ -8,7 +8,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import NavbarEnhanced from "@/components/navbar-enhanced"
 import { useAuth } from "@/lib/auth"
 
 interface Moment {
@@ -245,7 +244,6 @@ export default function MomentsPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-950">
-        <NavbarEnhanced />
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
@@ -258,8 +256,6 @@ export default function MomentsPage() {
 
   return (
     <div className="min-h-screen bg-gray-950 text-white">
-      <NavbarEnhanced />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">

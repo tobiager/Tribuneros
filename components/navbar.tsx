@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Home, User, LogOut, Menu, X } from "lucide-react"
+import { Home, User, LogOut, Menu, X, Trophy } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useAuth } from "@/lib/auth"
@@ -19,6 +19,7 @@ export default function Navbar() {
 
   const navItems = [
     { href: "/", label: "Inicio", icon: Home },
+    { href: "/partidos", label: "Partidos", icon: Trophy },
     { href: "/profile", label: "Mi Perfil", icon: User },
   ]
 
@@ -112,7 +113,6 @@ export default function Navbar() {
                     </Link>
                   )
                 })}
-
                 <div className="border-t border-gray-800 pt-4">
                   {loading ? (
                     <div className="flex items-center space-x-3 px-2">
@@ -157,7 +157,6 @@ export default function Navbar() {
           )}
         </div>
       </nav>
-
       <AuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} />
     </>
   )
