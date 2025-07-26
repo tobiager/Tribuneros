@@ -5,6 +5,38 @@ if (!API_KEY) {
   console.warn("API Football key not found. Using mock data.")
 }
 
+// Ligas permitidas - IDs específicos de la API Football
+const ALLOWED_LEAGUES = {
+  // Argentina
+  128: "Liga Profesional Argentina",
+  129: "Primera Nacional",
+  130: "Copa Argentina",
+  131: "Copa de la Liga",
+  132: "Primera B Metro",
+  133: "Federal A",
+  134: "Primera C",
+  135: "Promocional Amateur",
+
+  // Brasil
+  71: "Brasileirão Serie A",
+
+  // España
+  140: "La Liga",
+
+  // Italia
+  135: "Serie A",
+
+  // Inglaterra
+  39: "Premier League",
+
+  // Competiciones internacionales
+  9: "Copa América",
+  1: "Mundial",
+  4: "Eurocopa",
+  5: "Nations League",
+  32: "Eliminatorias Conmebol",
+}
+
 export interface ApiFootballMatch {
   fixture: {
     id: number
@@ -85,65 +117,92 @@ class ApiFootballService {
   }
 
   private getMockData(endpoint: string): any {
-    const mockMatch: ApiFootballMatch = {
-      fixture: {
-        id: 1,
-        date: new Date().toISOString(),
-        status: { short: "FT", long: "Match Finished" },
-        venue: { id: 1, name: "Estadio Monumental", city: "Buenos Aires" },
-      },
-      league: {
-        id: 1,
-        name: "Liga Profesional Argentina",
-        country: "Argentina",
-        logo: "/placeholder.svg",
-        season: 2024,
-        round: "Fecha 15",
-      },
-      teams: {
-        home: { id: 1, name: "River Plate", logo: "/placeholder.svg" },
-        away: { id: 2, name: "Boca Juniors", logo: "/placeholder.svg" },
-      },
-      goals: { home: 2, away: 1 },
+    const today = new Date()
+    const mockMatches: ApiFootballMatch[] = []
+
+    // Generate mock matches for testing
+    for (let i = 0; i < 5; i++) {
+      const matchDate = new Date(today)
+      matchDate.setDate(today.getDate() + (i - 2)) // Some past, some future
+
+      const mockMatch: ApiFootballMatch = {
+        fixture: {
+          id: i + 1,
+          date: matchDate.toISOString(),
+          status: {
+            short: i < 2 ? "FT" : i === 2 ? "LIVE" : "NS",
+            long: i < 2 ? "Match Finished" : i === 2 ? "Match Live" : "Not Started",
+          },
+          venue: { id: 1, name: "Estadio Monumental", city: "Buenos Aires" },
+        },
+        league: {
+          id: 128, // Liga Profesional Argentina
+          name: "Liga Profesional Argentina",
+          country: "Argentina",
+          logo: "/placeholder.svg",
+          season: 2024,
+          round: `Fecha ${15 + i}`,
+        },
+        teams: {
+          home: { id: 1, name: "River Plate", logo: "/placeholder.svg" },
+          away: { id: 2, name: "Boca Juniors", logo: "/placeholder.svg" },
+        },
+        goals: {
+          home: i < 2 ? Math.floor(Math.random() * 3) : null,
+          away: i < 2 ? Math.floor(Math.random() * 3) : null,
+        },
+      }
+      mockMatches.push(mockMatch)
     }
 
     return {
-      response: [mockMatch, { ...mockMatch, fixture: { ...mockMatch.fixture, id: 2 } }],
+      response: mockMatches,
     }
+  }
+
+  private filterAllowedLeagues(matches: ApiFootballMatch[]): ApiFootballMatch[] {
+    const allowedLeagueIds = Object.keys(ALLOWED_LEAGUES).map((id) => Number.parseInt(id))
+    return matches.filter((match) => allowedLeagueIds.includes(match.league.id))
+  }
+
+  async getMatchesByDate(date: string): Promise<ApiFootballMatch[]> {
+    const data = await this.makeRequest(`/fixtures?date=${date}`)
+    const matches = data.response || []
+    return this.filterAllowedLeagues(matches)
+  }
+
+  async getMatchesByDateRange(from: string, to: string): Promise<ApiFootballMatch[]> {
+    const data = await this.makeRequest(`/fixtures?from=${from}&to=${to}`)
+    const matches = data.response || []
+    return this.filterAllowedLeagues(matches)
   }
 
   async getTodayMatches(): Promise<ApiFootballMatch[]> {
     const today = new Date().toISOString().split("T")[0]
-    const data = await this.makeRequest(`/fixtures?date=${today}`)
-    return data.response || []
-  }
-
-  async getFeaturedMatches(): Promise<ApiFootballMatch[]> {
-    const leagues = [39, 140, 78, 61, 135] // Premier League, La Liga, Bundesliga, Ligue 1, Serie A
-    const season = new Date().getFullYear()
-
-    try {
-      const promises = leagues.map((league) => this.makeRequest(`/fixtures?league=${league}&season=${season}&last=5`))
-
-      const results = await Promise.all(promises)
-      const allMatches = results.flatMap((result) => result.response || [])
-
-      return allMatches.slice(0, 10)
-    } catch (error) {
-      console.error("Error fetching featured matches:", error)
-      const mockData = this.getMockData("/fixtures")
-      return mockData.response || []
-    }
+    return this.getMatchesByDate(today)
   }
 
   async searchMatches(query: string): Promise<ApiFootballMatch[]> {
     try {
       const data = await this.makeRequest(`/fixtures?search=${encodeURIComponent(query)}`)
-      return data.response || []
+      const matches = data.response || []
+      return this.filterAllowedLeagues(matches)
     } catch (error) {
       console.error("Error searching matches:", error)
       return []
     }
+  }
+
+  // Helper method to check if a league is allowed
+  isLeagueAllowed(leagueId: number): boolean {
+    return Object.keys(ALLOWED_LEAGUES)
+      .map((id) => Number.parseInt(id))
+      .includes(leagueId)
+  }
+
+  // Get list of allowed leagues
+  getAllowedLeagues(): typeof ALLOWED_LEAGUES {
+    return ALLOWED_LEAGUES
   }
 }
 

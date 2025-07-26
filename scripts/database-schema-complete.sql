@@ -13,6 +13,7 @@ CREATE TABLE profiles (
   avatar_url TEXT,
   bio TEXT,
   location TEXT,
+  is_admin BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -45,6 +46,9 @@ CREATE TABLE matches (
   venue_city TEXT,
   round_info TEXT,
   is_featured BOOLEAN DEFAULT FALSE,
+  is_manual BOOLEAN DEFAULT FALSE,
+  manual_home_team TEXT,
+  manual_away_team TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -171,3 +175,13 @@ CREATE POLICY "Matches are viewable by everyone" ON matches FOR SELECT USING (tr
 -- Permitir inserción de teams y matches (para sincronización con API)
 CREATE POLICY "Service role can manage teams" ON teams FOR ALL USING (true);
 CREATE POLICY "Service role can manage matches" ON matches FOR ALL USING (true);
+
+-- Crear índices para mejor rendimiento
+CREATE INDEX IF NOT EXISTS idx_matches_date ON matches(match_date);
+CREATE INDEX IF NOT EXISTS idx_matches_status ON matches(status);
+CREATE INDEX IF NOT EXISTS idx_matches_home_team ON matches(home_team_id);
+CREATE INDEX IF NOT EXISTS idx_matches_away_team ON matches(away_team_id);
+CREATE INDEX IF NOT EXISTS idx_match_views_user_match ON match_views(user_id, match_id);
+CREATE INDEX IF NOT EXISTS idx_match_opinions_user_match ON match_opinions(user_id, match_id);
+CREATE INDEX IF NOT EXISTS idx_match_favorites_user_match ON match_favorites(user_id, match_id);
+CREATE INDEX IF NOT EXISTS idx_match_reminders_user_match ON match_reminders(user_id, match_id);

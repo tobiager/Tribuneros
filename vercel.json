@@ -1,15 +1,13 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": ".next",
-  "framework": "nextjs",
   "functions": {
-    "app/api/**/*.ts": {
-      "runtime": "nodejs18.x"
+    "app/api/cron/daily-sync/route.ts": {
+      "maxDuration": 300
     }
   },
-  "env": {
-    "NEXT_PUBLIC_SUPABASE_URL": "@supabase_url",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@supabase_anon_key",
-    "NEXT_PUBLIC_API_FOOTBALL_KEY": "@api_football_key"
-  }
+  "crons": [
+    {
+      "path": "/api/cron/daily-sync",
+      "schedule": "0 3 * * *"
+    }
+  ]
 }
