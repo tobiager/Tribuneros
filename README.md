@@ -32,7 +32,7 @@
 
 ## 🧱 Estructura del Proyecto
 
-```
+\`\`\`
 /app
 ├── page.tsx                  → Página principal
 ├── partidos/                 → Sección de partidos (Hoy / Destacados)
@@ -57,7 +57,7 @@
 
 /public
 └── assets/                  → Logos, íconos, escudos, etc.
-```
+\`\`\`
 
 ---
 ## 🗄️ Base de Datos
@@ -162,4 +162,3 @@ Para probar la app sin la API externa:
 ---
 
 <p align="center"><b>❤️🐔 Hecho con pasión y dedicación por Tobias</b></p>
-
