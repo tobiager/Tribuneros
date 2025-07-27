@@ -10,7 +10,18 @@
 
 # ⚽ Tribuneros - La red social del fútbol
 
-**Tribuneros** es una aplicación web moderna desarrollada con **Next.js 15 + Supabase** que funciona como una especie de *Letterboxd del fútbol*. El objetivo es ofrecer una plataforma donde los hinchas puedan **registrar, puntuar y comentar los partidos que ven**, conectar con otros usuarios y compartir su experiencia futbolera.
+**Tribuneros** es una aplicación web moderna desarrollada con **Next.js 14.2.16 + Supabase** que funciona como una especie de *Letterboxd del fútbol*. El objetivo es ofrecer una plataforma donde los hinchas puedan **registrar, puntuar y comentar los partidos que ven**, conectar con otros usuarios y compartir su experiencia futbolera.
+
+## 📝 Ficha Técnica del Proyecto
+
+- **Nombre:** Tribuneros
+- **Desarrolladores principales:** Tobias Orban
+- **Tecnologías:** Next.js 14.2.16, Supabase, Tailwind CSS, PostgreSQL, TypeScript
+- **Lenguaje principal:** TypeScript
+- **Base de datos:** PostgreSQL (vía Supabase)
+- **Estado:** En desarrollo
+- **Licencia:** Pendiente
+- **Última actualización:** 2025-07-27
 
 ---
 
@@ -86,6 +97,10 @@ Se han creado políticas personalizadas para que:
 - Todas las funciones usan `SECURITY DEFINER` y `SET search_path TO public`.
 
 ---
+## ⚙️ Backend
+
+El proyecto utiliza funciones y _triggers_ de Supabase para mantener la integridad de los datos y sincronizar información con la API externa. En la carpeta [`scripts/`](scripts/) se encuentran los archivos SQL con la creación de tablas, triggers y políticas RLS.
+
 
 ## 🔧 Funcionalidades principales implementadas
 
@@ -106,6 +121,11 @@ Se han creado políticas personalizadas para que:
 - ✔️ Últimos partidos vistos
 - ✔️ Equipos favoritos (en desarrollo)
 
+## 📸 Capturas de pantalla
+
+_Aquí se incluirán capturas de la aplicación._
+
+
 ---
 
 ## 🧪 Testing manual sin la API
@@ -114,7 +134,7 @@ Para probar la app sin la API externa:
 
 1. Cargar partidos manualmente en la tabla `matches` (campos mínimos: id, fecha, equipos, hora, liga).
 2. Verificar funcionamiento de puntuación, opiniones, favoritos y vistas en esas entradas.
-3. Probar en local usando `npm run dev`.
+3. Probar en local usando `pnpm dev`.
 
 ---
 
@@ -128,23 +148,40 @@ Para probar la app sin la API externa:
   <img src="https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwindcss"/>
 </p>
 
+## 🚀 Instalación
+
+1. Cloná el repositorio.
+2. Ejecutá `pnpm install` para instalar dependencias.
+3. Creá un archivo `.env.local` con las variables de entorno listadas abajo.
+4. Iniciá la app con `pnpm dev`.
+
+### Variables de entorno necesarias
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `NEXT_PUBLIC_API_FOOTBALL_KEY`
+- `CRON_SECRET_TOKEN`
+
 ---
 
 ## 📋 Cómo contribuir
 
 1. Forkeá el repo.
 2. Clonalo y creá una rama nueva.
-3. Instalá dependencias con `npm install`.
-4. Configurá `.env.local` con tu Supabase URL y Key.
+3. Instalá dependencias con `pnpm install`.
+4. Configurá `.env.local` con tus variables de entorno.
 5. Hacé tus cambios y abrí un pull request con descripción clara.
 
 ---
 
-## 📌 Pendientes / En desarrollo
+## 📌 Roadmap
 
 - [ ] Notificación para partidos futuros ("recordame cuando empiece")
 - [ ] Equipos favoritos en el perfil
 - [ ] Buscador de partidos
+- [ ] Integrar autenticación con OAuth
+- [ ] Enviar notificaciones por email
+
 - [ ] Panel de administración para gestionar partidos destacados
 - [ ] Feed de actividad
 
@@ -156,6 +193,7 @@ Para probar la app sin la API externa:
 🧠 Ideador del proyecto y desarrollo fullstack  
 📧 tobiasorban00@gmail.com  
 🐦 [@tobiager](https://twitter.com/tobiager)
+Para colaborar podés abrir un issue o contactarme por email.
 
 > Si querés sumarte al proyecto, ¡mandame mensaje o hacé un fork y empezá a codear!
 
