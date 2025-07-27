@@ -32,32 +32,34 @@
 
 ## 🧱 Estructura del Proyecto
 
+```
 /app
 ├── page.tsx                  → Página principal
 ├── partidos/                 → Sección de partidos (Hoy / Destacados)
 │   ├── hoy/                  → Consume la API y muestra partidos del día
-│   ├── destacados/           → Partidos destacados seleccionados manualmente
+│   └── destacados/           → Partidos destacados seleccionados manualmente
 ├── profile/                  → Perfil del usuario
 │   ├── favorites/            → Partidos marcados como favoritos
 │   ├── opiniones/            → Opiniones dejadas por el usuario
-│   ├── partidos-vistos/      → Partidos que el usuario ya vio
-│
+│   └── partidos-vistos/      → Partidos que el usuario ya vio
+
 /components
 ├── MatchCard.tsx            → Componente visual para partidos
 ├── Navbar.tsx               → Navbar con autenticación
 ├── Footer.tsx               → Footer reutilizable
 ├── StarRating.tsx           → Estrellas para puntuar partidos
 ├── OpinionForm.tsx          → Componente de opinión
-│
+
 /lib
 ├── supabase.ts              → Conexión con Supabase
 ├── auth.ts                  → Funciones de autenticación
-├── database-service.ts      → Maneja lectura/escritura en la DB
-│
-/public
-├── assets/                  → Logos, íconos, escudos, etc.
----
+└── database-service.ts      → Maneja lectura/escritura en la DB
 
+/public
+└── assets/                  → Logos, íconos, escudos, etc.
+```
+
+---
 ## 🗄️ Base de Datos
 
 Actualmente usamos **Supabase** como backend y base de datos. Algunas tablas importantes:
