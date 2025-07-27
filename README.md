@@ -32,7 +32,7 @@
 
 ## 🧱 Estructura del Proyecto
 
-\`\`\`
+```
 /app
 ├── page.tsx                  → Página principal
 ├── partidos/                 → Sección de partidos (Hoy / Destacados)
@@ -57,7 +57,7 @@
 
 /public
 └── assets/                  → Logos, íconos, escudos, etc.
-\`\`\`
+```
 
 ---
 ## 🗄️ Base de Datos
