@@ -161,4 +161,5 @@ Para probar la app sin la API externa:
 
 ---
 
-<p align="center"><b>⚽️ Hecho con amor, fútbol y código en Argentina 🇦🇷</b></p>
+<p align="center"><b>❤️🐔 Hecho con pasión y dedicación por Tobias</b></p>
+
