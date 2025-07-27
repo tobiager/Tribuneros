@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/Tribuneros.png" alt="Logo de FACENA" width="100"/>
+  <img src="./assets/Tribuneros.png" alt="Logo de Tribuneros" width="100"/>
 </p>
 
 <p align="center">
