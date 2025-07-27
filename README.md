@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Soccer_ball_icon_black.svg/1024px-Soccer_ball_icon_black.svg.png" alt="Logo Tribuneros" width="100"/>
+  <img src="./assets/Tribuneros.png" alt="Logo de TRIBUNEROS" width="100"/>
 </p>
 
 <p align="center">
