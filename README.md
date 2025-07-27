@@ -1,7 +1,6 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/tobiager/Tribuneros/main/public/Tribuneros.png" alt="Logo de Tribuneros" width="100"/>
+  <img src="./assets/Tribuneros.png" alt="Logo de Tribuneros" width="100"/>
 </p>
-
 
 <p align="center">
   <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white"/>
@@ -33,7 +32,7 @@
 
 ## 🧱 Estructura del Proyecto
 
-```
+\`\`\`
 /app
 ├── page.tsx                  → Página principal
 ├── partidos/                 → Sección de partidos (Hoy / Destacados)
@@ -58,7 +57,7 @@
 
 /public
 └── assets/                  → Logos, íconos, escudos, etc.
-```
+\`\`\`
 
 ---
 ## 🗄️ Base de Datos
