@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/Tribuneros.png" alt="Logo de Tribuneros" width="100"/>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Soccer_ball_icon_black.svg/1024px-Soccer_ball_icon_black.svg.png" alt="Logo Tribuneros" width="100"/>
 </p>
 
 <p align="center">
@@ -32,7 +32,7 @@
 
 ## 🧱 Estructura del Proyecto
 
-\`\`\`
+```
 /app
 ├── page.tsx                  → Página principal
 ├── partidos/                 → Sección de partidos (Hoy / Destacados)
@@ -57,7 +57,7 @@
 
 /public
 └── assets/                  → Logos, íconos, escudos, etc.
-\`\`\`
+```
 
 ---
 ## 🗄️ Base de Datos
