@@ -1,6 +1,7 @@
 <p align="center">
-  <img src="./assets/Tribuneros.png" alt="Logo de Tribuneros" width="100"/>
+  <img src="https://raw.githubusercontent.com/tobiager/Tribuneros/main/public/Tribuneros.png" alt="Logo de Tribuneros" width="100"/>
 </p>
+
 
 <p align="center">
   <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white"/>
