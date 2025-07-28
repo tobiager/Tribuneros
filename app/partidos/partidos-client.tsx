@@ -20,20 +20,26 @@ import {
   Plus,
   Star,
   RefreshCw,
+  AlertCircle,
+  Database,
+  Wifi,
 } from "lucide-react"
 import { toast } from "sonner"
 import { useAuth } from "@/lib/auth"
 import { toggleMatchFavorite, toggleMatchReminder, getUserMatchInteractions } from "@/lib/database-actions"
-import { DatabaseService, autoSaveFinishedMatches } from "@/lib/database-service"
+import { DatabaseService, processMatchesWithTimezone } from "@/lib/database-service"
 import { apiFootballService } from "@/lib/api-football-service"
-import { autoSyncService } from "@/lib/auto-sync-service"
 import {
   getArgentinaDate,
   formatArgentinaDate,
   getDateLabel,
   isSameDayArgentina,
-  getMillisecondsUntilMidnightArgentina,
+  isPastDate,
+  isFutureDate,
+  formatDateDisplay,
+  formatTimeDisplay,
 } from "@/lib/timezone-utils"
+import { ARGENTINA_TIMEZONE } from "@/lib/constants"
 import MatchModal from "@/components/match-modal"
 import AuthModal from "@/components/auth-modal"
 import AddManualMatchModal from "@/components/add-manual-match-modal"
@@ -41,15 +47,10 @@ import type { ApiFootballMatch, UserMatchInteractions } from "@/lib/types"
 
 interface PartidosClientProps {
   initialTodayMatches: ApiFootballMatch[]
-  initialStoredTodayMatches: any[]
   initialFeaturedMatches: any[]
 }
 
-export default function PartidosClient({
-  initialTodayMatches,
-  initialStoredTodayMatches,
-  initialFeaturedMatches,
-}: PartidosClientProps) {
+export default function PartidosClient({ initialTodayMatches, initialFeaturedMatches }: PartidosClientProps) {
   const { user, loading: authLoading } = useAuth()
   const [selectedMatch, setSelectedMatch] = useState<ApiFootballMatch | null>(null)
   const [modalType, setModalType] = useState<"view" | "opinion" | "opinions-list" | null>(null)
@@ -66,129 +67,34 @@ export default function PartidosClient({
 
   // State for date navigation and matches - usando fecha argentina
   const [currentDate, setCurrentDate] = useState(getArgentinaDate())
-  const [todayMatches, setTodayMatches] = useState<(ApiFootballMatch | any)[]>([])
+  const [currentMatches, setCurrentMatches] = useState<(ApiFootballMatch | any)[]>([])
   const [featuredMatches, setFeaturedMatches] = useState(initialFeaturedMatches)
-  const [loadingToday, setLoadingToday] = useState(false)
+  const [loadingMatches, setLoadingMatches] = useState(false)
   const [lastUpdateTime, setLastUpdateTime] = useState<Date>(new Date())
-  const [autoUpdateTimer, setAutoUpdateTimer] = useState<NodeJS.Timeout | null>(null)
-
-  // Inicializar servicio de auto-sincronización
-  useEffect(() => {
-    console.log("🚀 Iniciando servicio de auto-sincronización")
-    autoSyncService.startAutoSync()
-
-    return () => {
-      autoSyncService.stopAutoSync()
-    }
-  }, [])
-
-  // Escuchar eventos de actualización automática
-  useEffect(() => {
-    const handleAutoUpdate = (event: CustomEvent) => {
-      console.log("📡 Evento de actualización automática recibido:", event.detail)
-
-      // Actualizar la fecha actual a la fecha argentina
-      const newArgentinaDate = getArgentinaDate()
-      setCurrentDate(newArgentinaDate)
-      setLastUpdateTime(new Date())
-
-      // Recargar datos
-      loadTodayMatches(newArgentinaDate)
-      refreshFeaturedMatches()
-
-      toast.success("¡Partidos actualizados automáticamente!", {
-        description: `Fecha actualizada: ${getDateLabel(newArgentinaDate)}`,
-      })
-    }
-
-    if (typeof window !== "undefined") {
-      window.addEventListener("partidosAutoUpdate", handleAutoUpdate as EventListener)
-
-      return () => {
-        window.removeEventListener("partidosAutoUpdate", handleAutoUpdate as EventListener)
-      }
-    }
-  }, [])
-
-  // Timer para actualización automática a medianoche argentina
-  useEffect(() => {
-    const setupMidnightTimer = () => {
-      const msUntilMidnight = getMillisecondsUntilMidnightArgentina()
-
-      console.log(
-        `⏰ Configurando timer para medianoche argentina en ${Math.round(msUntilMidnight / 1000 / 60)} minutos`,
-      )
-
-      const timer = setTimeout(() => {
-        console.log("🌅 ¡Medianoche argentina! Actualizando automáticamente...")
-
-        // Actualizar fecha
-        const newDate = getArgentinaDate()
-        setCurrentDate(newDate)
-        setLastUpdateTime(new Date())
-
-        // Recargar datos
-        loadTodayMatches(newDate)
-        refreshFeaturedMatches()
-
-        // Configurar próximo timer
-        setupMidnightTimer()
-
-        toast.success("¡Nuevo día! Partidos actualizados automáticamente", {
-          description: getDateLabel(newDate),
-        })
-      }, msUntilMidnight)
-
-      setAutoUpdateTimer(timer)
-    }
-
-    setupMidnightTimer()
-
-    return () => {
-      if (autoUpdateTimer) {
-        clearTimeout(autoUpdateTimer)
-      }
-    }
-  }, [])
 
   useEffect(() => {
     if (user && !authLoading) {
       loadUserInteractions()
       checkAdminStatus()
     }
-  }, [user, authLoading, todayMatches, featuredMatches])
+  }, [user, authLoading, currentMatches, featuredMatches])
 
   useEffect(() => {
-    loadTodayMatches(currentDate)
+    loadMatchesForDate(currentDate)
   }, [currentDate])
 
   // Initialize with today's data
   useEffect(() => {
     const argentinaToday = getArgentinaDate()
     if (isSameDayArgentina(currentDate, argentinaToday)) {
-      // Combinar partidos de API y base de datos para hoy
-      const combinedMatches = combineMatches(initialTodayMatches, initialStoredTodayMatches)
-      setTodayMatches(combinedMatches)
+      setCurrentMatches(initialTodayMatches)
     }
-  }, [initialTodayMatches, initialStoredTodayMatches, currentDate])
+  }, [initialTodayMatches, currentDate])
 
-  const combineMatches = (apiMatches: ApiFootballMatch[], dbMatches: any[]) => {
-    const combined = [...apiMatches]
-
-    // Agregar partidos de la base de datos que no estén en la API
-    dbMatches.forEach((dbMatch) => {
-      const existsInApi = apiMatches.some((apiMatch) => apiMatch.fixture.id === dbMatch.id)
-      if (!existsInApi) {
-        combined.push(dbMatch)
-      }
-    })
-
-    return combined.sort((a, b) => {
-      const dateA = new Date(a.fixture?.date || a.match_date)
-      const dateB = new Date(b.fixture?.date || b.match_date)
-      return dateA.getTime() - dateB.getTime()
-    })
-  }
+  // Initialize featured matches
+  useEffect(() => {
+    setFeaturedMatches(initialFeaturedMatches)
+  }, [initialFeaturedMatches])
 
   const checkAdminStatus = async () => {
     if (!user) return
@@ -201,8 +107,8 @@ export default function PartidosClient({
     }
   }
 
-  const loadTodayMatches = async (date: Date = currentDate) => {
-    setLoadingToday(true)
+  const loadMatchesForDate = async (date: Date = currentDate) => {
+    setLoadingMatches(true)
     try {
       const dateStr = formatArgentinaDate(date)
       const argentinaToday = getArgentinaDate()
@@ -210,43 +116,48 @@ export default function PartidosClient({
       console.log(`📅 Cargando partidos para: ${dateStr} (${getDateLabel(date)})`)
 
       if (isSameDayArgentina(date, argentinaToday)) {
-        // Para hoy: combinar API y base de datos
-        const [apiMatches, dbMatches] = await Promise.all([
-          apiFootballService.getMatchesByDate(dateStr),
-          DatabaseService.getMatchesByDate(dateStr),
-        ])
-
-        const combined = combineMatches(apiMatches, dbMatches)
-        setTodayMatches(combined)
-
-        // Auto-guardar partidos finalizados
-        await autoSaveFinishedMatches(apiMatches)
-
-        console.log(
-          `✅ Partidos de hoy cargados: ${combined.length} (${apiMatches.length} API + ${dbMatches.length} DB)`,
-        )
-      } else if (date > argentinaToday) {
-        // Para fechas futuras: solo API
+        // Para HOY: usar API externa, filtrar por zona horaria y auto-guardar ayer
+        console.log("📡 Consultando API para partidos de HOY con filtro de zona horaria")
         const apiMatches = await apiFootballService.getMatchesByDate(dateStr)
-        setTodayMatches(apiMatches)
-        console.log(`✅ Partidos futuros cargados: ${apiMatches.length}`)
-      } else {
-        // Para fechas pasadas: solo base de datos
+
+        // Procesar partidos con zona horaria argentina
+        const { todayMatches, savedYesterdayCount } = await processMatchesWithTimezone(apiMatches)
+
+        setCurrentMatches(todayMatches)
+
+        if (savedYesterdayCount > 0) {
+          toast.success(`${savedYesterdayCount} partidos de ayer guardados automáticamente`)
+          // Recargar partidos destacados si se guardaron nuevos
+          await refreshFeaturedMatches()
+        }
+
+        console.log(`✅ Partidos de HOY filtrados por zona horaria: ${todayMatches.length}`)
+      } else if (isPastDate(date)) {
+        // Para fechas PASADAS: solo consultar base de datos
+        console.log("🗄️ Consultando BD para fecha pasada")
         const dbMatches = await DatabaseService.getMatchesByDate(dateStr)
-        setTodayMatches(dbMatches)
-        console.log(`✅ Partidos pasados cargados: ${dbMatches.length}`)
+        setCurrentMatches(dbMatches)
+        console.log(`✅ Partidos pasados cargados desde BD: ${dbMatches.length}`)
+      } else if (isFutureDate(date)) {
+        // Para fechas FUTURAS: usar API externa (hasta 7 días)
+        console.log("🔮 Consultando API para fecha futura")
+        const apiMatches = await apiFootballService.getMatchesByDate(dateStr)
+        setCurrentMatches(apiMatches)
+        console.log(`✅ Partidos futuros cargados desde API: ${apiMatches.length}`)
       }
     } catch (error) {
-      console.error("Error loading today matches:", error)
+      console.error("Error loading matches for date:", error)
       toast.error("Error al cargar los partidos")
+      setCurrentMatches([])
     } finally {
-      setLoadingToday(false)
+      setLoadingMatches(false)
     }
   }
 
   const refreshFeaturedMatches = async () => {
     try {
-      const featuredData = await DatabaseService.getFeaturedStoredMatches()
+      console.log("🔄 Actualizando partidos destacados...")
+      const featuredData = await DatabaseService.getFeaturedMatches()
       setFeaturedMatches(featuredData)
       console.log(`✅ Partidos destacados actualizados: ${featuredData.length}`)
     } catch (error) {
@@ -260,13 +171,15 @@ export default function PartidosClient({
     setLoadingInteractions(true)
     try {
       const allMatchIds = [
-        ...todayMatches.map((m) => m.fixture?.id || m.id),
+        ...currentMatches.map((m) => m.fixture?.id || m.id),
         ...featuredMatches.map((m) => m.id),
       ].filter(Boolean)
 
-      const result = await getUserMatchInteractions(user.id, allMatchIds)
-      if (result.success) {
-        setUserInteractions(result.data)
+      if (allMatchIds.length > 0) {
+        const result = await getUserMatchInteractions(user.id, allMatchIds)
+        if (result.success) {
+          setUserInteractions(result.data)
+        }
       }
     } catch (error) {
       console.error("Error loading user interactions:", error)
@@ -277,7 +190,7 @@ export default function PartidosClient({
 
   const refreshData = async () => {
     try {
-      await Promise.all([loadTodayMatches(currentDate), refreshFeaturedMatches()])
+      await Promise.all([loadMatchesForDate(currentDate), refreshFeaturedMatches()])
 
       if (user) {
         await loadUserInteractions()
@@ -381,21 +294,6 @@ export default function PartidosClient({
     return "bg-blue-500/20 text-blue-400 border-blue-500/30"
   }
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("es-AR", {
-      weekday: "short",
-      day: "numeric",
-      month: "short",
-    })
-  }
-
-  const formatTime = (dateString: string) => {
-    return new Date(dateString).toLocaleTimeString("es-AR", {
-      hour: "2-digit",
-      minute: "2-digit",
-    })
-  }
-
   const isMatchFinished = (status: string) => {
     return ["FT", "AET", "PEN"].includes(status)
   }
@@ -472,11 +370,11 @@ export default function PartidosClient({
             <Badge className={`${getStatusColor(status)} flex-shrink-0`}>{getStatusText(status)}</Badge>
           </div>
 
-          {/* Equipos y resultado - Mejorado para nombres largos */}
+          {/* Equipos y resultado */}
           <div className="flex items-center justify-between mb-4 gap-2">
             <div className="flex items-center gap-2 flex-1 min-w-0">
               <img
-                src={homeTeam.logo || "/placeholder.svg"}
+                src={homeTeam.logo_url || homeTeam.logo || "/placeholder.svg"}
                 alt={homeTeam.name}
                 className="h-8 w-8 flex-shrink-0"
                 onError={(e) => {
@@ -487,13 +385,13 @@ export default function PartidosClient({
             </div>
 
             <div className="text-xl sm:text-2xl font-bold text-green-400 px-2 flex-shrink-0">
-              {homeScore !== null && awayScore !== null ? `${homeScore} - ${awayScore}` : "vs"}
+              {homeScore !== null && awayScore !== null ? `${homeScore} - ${awayScore}` : "VS"}
             </div>
 
             <div className="flex items-center gap-2 flex-1 min-w-0 justify-end">
               <span className="font-semibold text-white truncate text-sm sm:text-base text-right">{awayTeam.name}</span>
               <img
-                src={awayTeam.logo || "/placeholder.svg"}
+                src={awayTeam.logo_url || awayTeam.logo || "/placeholder.svg"}
                 alt={awayTeam.name}
                 className="h-8 w-8 flex-shrink-0"
                 onError={(e) => {
@@ -507,11 +405,11 @@ export default function PartidosClient({
           <div className="flex items-center justify-center gap-3 text-xs sm:text-sm text-gray-400 mb-4 flex-wrap">
             <div className="flex items-center gap-1">
               <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span>{formatDate(matchDate)}</span>
+              <span>{formatDateDisplay(matchDate)}</span>
             </div>
             <div className="flex items-center gap-1">
               <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span>{formatTime(matchDate)}</span>
+              <span>{formatTimeDisplay(matchDate)}</span>
             </div>
             {venue?.name && (
               <div className="flex items-center gap-1 min-w-0">
@@ -533,34 +431,6 @@ export default function PartidosClient({
           <div className="space-y-2">
             {/* Primera fila */}
             <div className="flex gap-2">
-              {isMatchFinished(status) && (
-                <>
-                  <Button
-                    onClick={() => handleAction(match, "view")}
-                    variant="outline"
-                    size="sm"
-                    className={`flex-1 border-gray-700 text-gray-300 hover:bg-gray-800 text-xs sm:text-sm ${
-                      hasMatchView(matchId) ? "bg-blue-500/20 border-blue-500/30 text-blue-400" : ""
-                    }`}
-                  >
-                    <Eye className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                    {hasMatchView(matchId) ? "Visto" : "Lo vi"}
-                  </Button>
-
-                  <Button
-                    onClick={() => handleAction(match, "opinion")}
-                    variant="outline"
-                    size="sm"
-                    className={`flex-1 border-gray-700 text-gray-300 hover:bg-gray-800 text-xs sm:text-sm ${
-                      hasMatchOpinion(matchId) ? "bg-green-500/20 border-green-500/30 text-green-400" : ""
-                    }`}
-                  >
-                    <MessageSquare className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                    {hasMatchOpinion(matchId) ? "Opiné" : "Opinar"}
-                  </Button>
-                </>
-              )}
-
               {isMatchScheduled(status) && (
                 <Button
                   onClick={() => handleToggleReminder(match)}
@@ -571,13 +441,24 @@ export default function PartidosClient({
                   }`}
                 >
                   <Bell className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                  {hasMatchReminder(matchId) ? "Recordando" : "Recordar"}
+                  Recordar
                 </Button>
               )}
-            </div>
 
-            {/* Segunda fila */}
-            <div className="flex gap-2">
+              {isMatchFinished(status) && (
+                <Button
+                  onClick={() => handleAction(match, "view")}
+                  variant="outline"
+                  size="sm"
+                  className={`flex-1 border-gray-700 text-gray-300 hover:bg-gray-800 text-xs sm:text-sm ${
+                    hasMatchView(matchId) ? "bg-blue-500/20 border-blue-500/30 text-blue-400" : ""
+                  }`}
+                >
+                  <Eye className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                  Lo vi
+                </Button>
+              )}
+
               <Button
                 onClick={() => handleToggleFavorite(match)}
                 variant="outline"
@@ -589,7 +470,10 @@ export default function PartidosClient({
                 <Heart className={`h-3 w-3 sm:h-4 sm:w-4 mr-1 ${isMatchFavorite(matchId) ? "fill-current" : ""}`} />
                 Favorito
               </Button>
+            </div>
 
+            {/* Segunda fila */}
+            <div className="flex gap-2">
               <Button
                 onClick={() => handleAction(match, "opinions-list")}
                 variant="outline"
@@ -599,6 +483,20 @@ export default function PartidosClient({
                 <Users className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                 Opiniones
               </Button>
+
+              {isMatchFinished(status) && (
+                <Button
+                  onClick={() => handleAction(match, "opinion")}
+                  variant="outline"
+                  size="sm"
+                  className={`flex-1 border-gray-700 text-gray-300 hover:bg-gray-800 text-xs sm:text-sm ${
+                    hasMatchOpinion(matchId) ? "bg-green-500/20 border-green-500/30 text-green-400" : ""
+                  }`}
+                >
+                  <MessageSquare className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                  {hasMatchOpinion(matchId) ? "Opiné" : "Opinar"}
+                </Button>
+              )}
             </div>
           </div>
         </CardContent>
@@ -609,7 +507,7 @@ export default function PartidosClient({
   const renderEmptyState = (message: string) => (
     <div className="text-center py-12">
       <div className="text-gray-400 mb-2">
-        <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
+        <AlertCircle className="h-12 w-12 mx-auto mb-4 opacity-50" />
       </div>
       <p className="text-gray-400">{message}</p>
     </div>
@@ -666,7 +564,7 @@ export default function PartidosClient({
             <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
               <Clock className="h-3 w-3" />
               <span>Última actualización: {lastUpdateTime.toLocaleTimeString("es-AR")}</span>
-              <span className="text-green-400">• Actualización automática activa</span>
+              <span className="text-green-400">• Zona horaria Argentina activa</span>
             </div>
           </div>
 
@@ -696,7 +594,7 @@ export default function PartidosClient({
         <Tabs defaultValue="today" className="w-full">
           <TabsList className="grid w-full grid-cols-2 bg-gray-900 border-gray-800">
             <TabsTrigger value="today" className="data-[state=active]:bg-green-500 data-[state=active]:text-black">
-              Partidos de {getDateLabel(currentDate)} ({todayMatches.length})
+              Partidos de Hoy ({currentMatches.length})
             </TabsTrigger>
             <TabsTrigger value="featured" className="data-[state=active]:bg-green-500 data-[state=active]:text-black">
               Partidos Destacados ({featuredMatches.length})
@@ -724,7 +622,7 @@ export default function PartidosClient({
                     day: "numeric",
                     month: "long",
                     year: "numeric",
-                    timeZone: "America/Argentina/Buenos_Aires",
+                    timeZone: ARGENTINA_TIMEZONE,
                   })}
                 </p>
               </div>
@@ -740,13 +638,39 @@ export default function PartidosClient({
               </Button>
             </div>
 
-            {loadingToday ? (
+            {/* Indicador de fuente de datos */}
+            <div className="mb-4 text-center">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-800 rounded-full text-xs text-gray-400">
+                {isSameDayArgentina(currentDate, getArgentinaDate()) ? (
+                  <>
+                    <Wifi className="w-3 h-3 text-green-400" />
+                    Datos en vivo con filtro de zona horaria Argentina
+                  </>
+                ) : isPastDate(currentDate) ? (
+                  <>
+                    <Database className="w-3 h-3 text-blue-400" />
+                    Partidos guardados en base de datos
+                  </>
+                ) : (
+                  <>
+                    <Wifi className="w-3 h-3 text-yellow-400" />
+                    Partidos futuros desde API externa
+                  </>
+                )}
+              </div>
+            </div>
+
+            {loadingMatches ? (
               renderLoadingSkeleton()
-            ) : todayMatches.length === 0 ? (
-              renderEmptyState("No hay partidos programados para esta fecha")
+            ) : currentMatches.length === 0 ? (
+              renderEmptyState(
+                isPastDate(currentDate)
+                  ? "No hay partidos guardados para esta fecha"
+                  : "No hay partidos programados para esta fecha",
+              )
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {todayMatches.map((match) => {
+                {currentMatches.map((match) => {
                   const isFromAPI = !!match.fixture
                   return renderMatchCard(match, isFromAPI)
                 })}
@@ -755,6 +679,15 @@ export default function PartidosClient({
           </TabsContent>
 
           <TabsContent value="featured" className="mt-6">
+            <div className="mb-4">
+              <h3 className="text-xl font-semibold text-white mb-2">Partidos Destacados</h3>
+              <p className="text-sm text-gray-400">Partidos finalizados con más interacciones de la comunidad</p>
+              <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
+                <Database className="w-3 h-3 text-blue-400" />
+                <span>Datos desde base de datos Supabase</span>
+              </div>
+            </div>
+
             {featuredMatches.length === 0 ? (
               renderEmptyState("No hay partidos destacados disponibles")
             ) : (
