@@ -15,10 +15,10 @@ const ALLOWED_LEAGUES = {
   132: "Primera B Metro",
   133: "Federal A",
   134: "Primera C",
-  135: "Promocional Amateur",
+  1067: "Promocional Amateur",
 
   // Brasil
-  71: "Brasileirão Serie A",
+  71: "Brasileirão",
 
   // España
   140: "La Liga",
