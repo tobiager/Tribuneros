@@ -1,204 +1,204 @@
 <p align="center">
-  <img src="./public/Tribuneros.png" alt="Logo de TRIBUNEROS" width="100"/>
+  <img src="./public/Tribuneros.png" alt="Logo de Tribuneros" width="120"/>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs"/>
-  <img src="https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase"/>
-  <img src="https://img.shields.io/badge/Estado-En%20Desarrollo-yellow?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/Framework-Next.js-000000?style=for-the-badge&logo=nextdotjs"/>
+  <img src="https://img.shields.io/badge/Backend-Supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white"/>
+  <img src="https://img.shields.io/badge/DB-PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Styling-TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Language-TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Hosting-Vercel-000000?style=for-the-badge&logo=vercel"/>
+  <img src="https://img.shields.io/badge/Status-En%20Desarrollo-yellow?style=for-the-badge"/>
 </p>
 
-# ⚽ Tribuneros - La red social del fútbol
+# Tribuneros - La red social del fútbol
 
-**Tribuneros** es una plataforma web desarrollada con **Next.js 15 + Supabase** que funciona como un *Letterboxd del fútbol*. Fue creada con el objetivo de brindarle a los hinchas una forma moderna y social de **registrar, puntuar y comentar los partidos que ven**, ya sea en la cancha o desde casa. La app también permite descubrir qué están viendo otros usuarios, guardar favoritos, compartir opiniones y seguir equipos.
-
----
-
-## 📌 Ficha Técnica
-
-| Atributo                 | Detalle                                 |
-|--------------------------|------------------------------------------|
-| Nombre del Proyecto      | Tribuneros                               |
-| Tipo de Proyecto         | Aplicación Web / Red Social Deportiva    |
-| Tecnologías Principales  | Next.js 15, Supabase, TailwindCSS, PostgreSQL |
-| Lenguaje Principal       | TypeScript                               |
-| Autenticación            | Supabase Auth (Google, Twitter)          |
-| Hosting                  | Vercel                                   |
-| Base de Datos            | Supabase (PostgreSQL)                    |
-| Estado                   | En desarrollo                            |
-| Licencia                 | MIT                                      |
-| Última actualización     | Julio 2025                               |
-| Autor principal          | Tobias Orban - tobiasorban00@gmail.com   |
+**Tribuneros** es una aplicación web construida con **Next.js 15 y Supabase** que propone una nueva forma de interactuar con el fútbol. Inspirada en plataformas como Letterboxd, permite a los usuarios registrar, puntuar y comentar los partidos que ven, ya sea en vivo o por televisión. Además, ofrece funciones sociales como favoritos, opiniones públicas, estadísticas personales y más.
 
 ---
 
-## 🧠 ¿Qué hace Tribuneros?
+## 🗂️ Información general
 
-- 🗓️ Muestra los **partidos del día** desde una API externa de fútbol.
-- 🌟 Permite **puntuar los partidos** del 1 al 5 estrellas.
-- 💬 Permite dejar y ver **opiniones escritas** de cada partido.
-- 👁️ Marcar si viste un partido (en TV o en la cancha).
-- ⭐ Guardar partidos como **favoritos**.
-- 👤 Acceder a tu **perfil**, donde se muestran:
-  - Partidos que viste
-  - Opiniones que dejaste
-  - Favoritos
-  - Equipos que seguís
-  - Estadísticas personales
+| Atributo               | Detalle                                           |
+|------------------------|----------------------------------------------------|
+| Nombre del Proyecto    | Tribuneros                                         |
+| Tipo                   | Plataforma Web / Social Deportiva                  |
+| Tecnologías            | Next.js, Supabase, PostgreSQL, TailwindCSS         |
+| Lenguaje               | TypeScript                                         |
+| Autenticación          | Supabase Auth (Google, Twitter)                   |
+| Base de Datos          | PostgreSQL (Supabase)                             |
+| Hosting                | Vercel                                             |
+| Licencia               | MIT                                                |
+| Estado del proyecto    | En desarrollo                                      |
+| Última actualización   | Julio 2025                                         |
+| Autor                  | Tobias Orban - tobiasorban00@gmail.com            |
 
 ---
 
-## 🔍 Funcionalidades Principales
+## 🧩 Descripción funcional
 
-### 🎯 Partidos
-- 🔁 Sincronización diaria con la API para mostrar los partidos de hoy.
-- 🧠 Lógica para seleccionar y mostrar partidos destacados.
-- ⭐ Sistema de puntuación con promedio visible.
-- 🗣️ Sistema de opiniones públicas por partido.
-- 📌 Favoritos por usuario.
-- ✅ Visualización marcada (TV / cancha).
-- ⏰ Función futura: "Recordame cuando empiece".
+Tribuneros permite:
 
-### 👤 Perfil del Usuario
-- Historial de partidos vistos.
+- Consultar los **partidos del día**, obtenidos desde una API externa.
+- Registrar si se vio un partido (en TV o en la cancha).
+- Puntuar los partidos del 1 al 5.
+- Escribir y leer opiniones públicas.
+- Marcar partidos como favoritos.
+- Acceder a un perfil con:
+  - Historial de partidos vistos.
+  - Opiniones propias.
+  - Favoritos guardados.
+  - Equipos seguidos (en desarrollo).
+  - Estadísticas personales.
+
+---
+
+## 🧠 Funcionalidades clave
+
+### Partidos
+
+- Sincronización diaria con la API de fútbol.
+- Vista de partidos destacados (selección curada).
+- Puntuación de partidos con promedio general.
+- Opiniones públicas asociadas.
+- Marcado de visualización (TV / Estadio).
+- Recordatorios de inicio (planeado).
+
+### Perfil del Usuario
+
+- Historial completo.
 - Opiniones escritas.
-- Favoritos listados.
-- Estadísticas generales.
+- Lista de favoritos.
 - Equipos seguidos (en desarrollo).
+- Métricas y estadísticas propias.
 
 ---
 
-## 🗄️ Base de Datos y Backend (Supabase)
+## 🛠️ Backend y Base de Datos
 
-La base de datos utiliza PostgreSQL en Supabase con políticas de seguridad (RLS). Algunas de las tablas clave:
+**Supabase + PostgreSQL** con RLS habilitado para máxima seguridad.
 
-| Tabla              | Descripción                                        |
-|--------------------|----------------------------------------------------|
-| matches            | Partidos sincronizados desde la API externa        |
-| match_ratings      | Puntuaciones (1 a 5 estrellas)                     |
-| match_opinions     | Opiniones escritas por los usuarios                |
-| favorites          | Relación usuario - partidos favoritos              |
-| views              | Registro de visualización (TV / cancha)           |
-| user_profiles      | Perfil extendido de cada usuario                   |
-| teams / leagues    | Info de equipos y ligas (nombre, escudo, país)     |
+**Tablas principales:**
 
-🔒 Toda la sincronización se hace desde `lib/database-service.ts` con control de errores y permisos.
+- `matches` → Partidos sincronizados
+- `match_ratings` → Puntuaciones de usuarios
+- `match_opinions` → Opiniones escritas
+- `favorites` → Favoritos por usuario
+- `views` → Visualizaciones (TV o estadio)
+- `user_profiles` → Datos extendidos del usuario
+- `teams`, `leagues` → Información de equipos y ligas
 
----
-
-## 🔐 Seguridad y Permisos (RLS)
-
-Tribuneros usa **Row Level Security** activado en Supabase para asegurar integridad y privacidad.  
-Características de seguridad implementadas:
-
-- ✅ Cada usuario solo puede leer/escribir su información.
-- ✅ Roles como `service_role` y `admin` pueden insertar partidos.
-- ✅ Todas las funciones PostgreSQL personalizadas usan:
-  - SECURITY DEFINER
-  - SET search_path TO public
+La lógica se gestiona desde `lib/database-service.ts`.
 
 ---
 
-## 📁 Estructura del Proyecto (Next.js App Router)
+## 🔐 Seguridad
+
+- Row Level Security (RLS) activo.
+- Funciones personalizadas con `SECURITY DEFINER` y `SET search_path`.
+- Acceso controlado por rol (`service_role`, `admin`, `auth.uid()`).
+
+---
+
+## 🧱 Estructura del Proyecto
 
 ```bash
 /app
-├── page.tsx                  → Página de inicio
+├── page.tsx
 ├── partidos/
-│   ├── hoy/                  → Lista partidos del día desde API
-│   └── destacados/           → Partidos destacados (BD)
+│   ├── hoy/
+│   └── destacados/
 ├── profile/
-│   ├── favorites/            → Favoritos del usuario
-│   ├── opiniones/            → Opiniones del usuario
-│   └── partidos-vistos/      → Partidos que vio
+│   ├── favorites/
+│   ├── opiniones/
+│   └── partidos-vistos/
 
 /components
-├── MatchCard.tsx            → Componente visual del partido
-├── StarRating.tsx           → Componente para puntuar
-├── OpinionForm.tsx          → Formulario de opinión
-├── Navbar.tsx               → Barra de navegación con auth
-├── Footer.tsx               → Footer reutilizable
+├── MatchCard.tsx
+├── StarRating.tsx
+├── OpinionForm.tsx
+├── Navbar.tsx
+├── Footer.tsx
 
 /lib
-├── supabase.ts              → Cliente Supabase
-├── auth.ts                  → Funciones de autenticación
-└── database-service.ts      → Lógica de interacción con la BD
+├── supabase.ts
+├── auth.ts
+└── database-service.ts
 
 /public
-└── assets/                  → Logos, escudos, íconos
+└── assets/
 ```
 
 ---
 
-## 🚀 Instalación y Ejecución Local
+## 🚀 Instalación
 
 ```bash
-# Cloná el proyecto
+# Clonar repositorio
 git clone https://github.com/tu-usuario/tribuneros.git
 cd tribuneros
 
-# Instalá dependencias
+# Instalar dependencias
 npm install
 
-# Configurá las variables de entorno en `.env.local`
-NEXT_PUBLIC_SUPABASE_URL=https://<tu-url>.supabase.co
+# Configurar entorno
+NEXT_PUBLIC_SUPABASE_URL=https://<your-url>.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=ey...
 
-# Ejecutá en desarrollo
+# Ejecutar en desarrollo
 npm run dev
 ```
 
 ---
 
-## 🧪 Testeo Manual sin la API
+## 🧪 Testeo sin API
 
-1. Insertá partidos manualmente en la tabla `matches`.
-2. Verificá si podés puntuar, opinar, ver, marcar como favorito.
-3. Asegurate que el flujo de perfil también funcione.
-
----
-
-## 🧰 Tecnologías Usadas
-
-- Next.js 15 (App Router, SSR/ISR)
-- Supabase (Auth, DB, Edge Functions)
-- PostgreSQL (con RLS)
-- TailwindCSS (estilos rápidos y responsivos)
-- TypeScript (tipado estricto)
-- Vercel (hosting)
+1. Insertar manualmente partidos en `matches`.
+2. Probar puntuar, comentar, ver y guardar favoritos.
+3. Validar comportamiento completo desde el perfil.
 
 ---
 
-## 🧭 Roadmap / Pendientes
+## 🧰 Tecnologías utilizadas
 
-- [ ] Notificaciones tipo "Recordame este partido"
-- [ ] Sección de Equipos Favoritos en el perfil
-- [ ] Buscador general de partidos
-- [ ] Panel de administración (para destacar partidos)
-- [ ] Feed tipo red social con actividad de usuarios
-- [ ] Sistema de badges y estadísticas avanzadas
-- [ ] Versión mobile con PWA
-
----
-
-## 🤝 Cómo contribuir
-
-1. Hacé un fork del repo.
-2. Clonalo localmente.
-3. Creá una nueva rama (`git checkout -b feature-nombre`).
-4. Hacé tus cambios y probalos.
-5. Abrí un pull request con una descripción clara.
+- ![Next.js](https://img.shields.io/badge/Next.js-000?style=flat-square&logo=nextdotjs)
+- ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat-square&logo=supabase)
+- ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=flat-square&logo=postgresql&logoColor=white)
+- ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=flat-square&logo=tailwindcss)
+- ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript)
+- ![Vercel](https://img.shields.io/badge/Vercel-000?style=flat-square&logo=vercel)
 
 ---
 
-## 👨‍💻 Autor
+## 📅 Roadmap
+
+- [ ] Notificaciones “Recordame este partido”
+- [ ] Equipos favoritos
+- [ ] Buscador de partidos
+- [ ] Panel de administración
+- [ ] Feed de actividad social
+- [ ] Insignias y estadísticas avanzadas
+- [ ] PWA Mobile
+
+---
+
+## 🤝 Contribuciones
+
+1. Hacé un fork.
+2. Cloná tu fork localmente.
+3. Creá una rama: `git checkout -b feature-nombre`.
+4. Subí los cambios.
+5. Hacé un PR.
+
+---
+
+## 👤 Autor
 
 **Tobias Orban**  
 📧 tobiasorban00@gmail.com  
 🐦 [@tobiager](https://twitter.com/tobiager)  
-🎓 Estudiante de Licenciatura en Sistemas (UNNE)  
-❤️ Fanático de River, el buen fútbol y el código limpio
-
----
+🎓 Estudiante de Licenciatura en Sistemas - UNNE  
+⚽ Apasionado por el fútbol, el desarrollo y la comunidad digital.
 
 <p align="center"><b>❤️🐔 Hecho con pasión y dedicación por Tobias</b></p>
