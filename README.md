@@ -3,13 +3,13 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Framework-Next.js-000000?style=for-the-badge&logo=nextdotjs"/>
-  <img src="https://img.shields.io/badge/Backend-Supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white"/>
-  <img src="https://img.shields.io/badge/DB-PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Styling-TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Language-TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Hosting-Vercel-000000?style=for-the-badge&logo=vercel"/>
-  <img src="https://img.shields.io/badge/Status-En%20Desarrollo-yellow?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/-Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js"/>
+  <img src="https://img.shields.io/badge/-Supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase"/>
+  <img src="https://img.shields.io/badge/-PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL"/>
+  <img src="https://img.shields.io/badge/-TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="TailwindCSS"/>
+  <img src="https://img.shields.io/badge/-TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript"/>
+  <img src="https://img.shields.io/badge/-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel"/>
+  <img src="https://img.shields.io/badge/-En%20Desarrollo-yellow?style=for-the-badge" alt="Estado"/>
 </p>
 
 # Tribuneros - La red social del fútbol
@@ -162,14 +162,17 @@ npm run dev
 
 ## 🧰 Tecnologías utilizadas
 
-- ![Next.js](https://img.shields.io/badge/Next.js-000?style=flat-square&logo=nextdotjs)
-- ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat-square&logo=supabase)
-- ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=flat-square&logo=postgresql&logoColor=white)
-- ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=flat-square&logo=tailwindcss)
-- ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript)
-- ![Vercel](https://img.shields.io/badge/Vercel-000?style=flat-square&logo=vercel)
+| Tecnología | Descripción |
+|-----------|-------------|
+| ![Next.js](https://img.shields.io/badge/-Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white) | Framework de React usado para construir toda la aplicación web. Permite el rendering híbrido (SSR/SSG), rutas por archivos, manejo de API Routes y excelente performance. |
+| ![Supabase](https://img.shields.io/badge/-Supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white) | Plataforma Backend as a Service (BaaS) usada como backend principal: proporciona base de datos, autenticación, funciones y RLS. |
+| ![PostgreSQL](https://img.shields.io/badge/-PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white) | Motor de base de datos relacional utilizado para almacenar partidos, usuarios, opiniones, puntuaciones y más. Gestionado automáticamente por Supabase. |
+| ![TailwindCSS](https://img.shields.io/badge/-TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white) | Framework CSS utility-first para diseñar de forma rápida y moderna toda la interfaz de usuario. |
+| ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white) | Superset de JavaScript que añade tipado estático. Mejora la mantenibilidad y escalabilidad del código en el proyecto. |
+| ![Vercel](https://img.shields.io/badge/-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white) | Plataforma usada para el despliegue automático de la app. Cada push en GitHub actualiza automáticamente la versión online. |
 
 ---
+
 
 ## 📅 Roadmap
 
